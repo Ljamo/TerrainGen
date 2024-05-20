@@ -72,7 +72,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)bin\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>$(Platform)bin-int\$(Configuration)\</IntDir>
+    <IntDir>$(SolutionDir)bin-int\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)bin\$(Platform)\$(Configuration)\</OutDir>
@@ -153,6 +153,7 @@
   <ItemGroup>
     <ClInclude Include="src\Input.h" />
     <ClInclude Include="src\Camera.h" />
+    <ClInclude Include="src\pch.h" />
     <ClInclude Include="src\Shader.h" />
     <ClInclude Include="src\Renderer.h" />
     <ClInclude Include="src\Application.h" />
