@@ -12,6 +12,9 @@ public:
     void CleanUp();
 
     Shader* shader = nullptr;
+    
+    GLfloat* s_Vertices = nullptr;
+    std::vector<GLfloat> vertices;
 
     std::string vertexShaderPath = "";
     std::string fragmentShaderPath = "";

@@ -6,7 +6,8 @@ Application::Application(uint32_t width, uint32_t height, const std::string& tit
 {
     vertexShaderPath = (parentDir + "\\TerrainGen\\src\\shaders\\" + shaderName + ".vert").c_str();
     fragmentShaderPath = (parentDir + "\\TerrainGen\\src\\shaders\\" + shaderName + ".frag").c_str();
-    Init();
+
+    //Init();
 }
 
 // Framebuffer size callback definition
@@ -47,19 +48,17 @@ bool Application::Init()
 
     glViewport(0, 0, m_Width, m_Height);
 
-    GLfloat vertices[] =
+    if (!vertices.empty())
     {
-        -0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f, // Lower left corner
-        0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f, // Lower right corner
-        0.0f, 0.5f * float(sqrt(3)) * 2 / 3, 0.0f // Upper corner
-    };
+        s_Vertices = &vertices[0];
+    }
 
     // Generate VBO and bind it
     glGenBuffers(1, &VBO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
     // Send vertices to GPU
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), s_Vertices, GL_STATIC_DRAW);
 
     // Generate VAO and bind it
     glGenVertexArrays(1, &VAO);
