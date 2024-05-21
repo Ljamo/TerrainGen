@@ -1,19 +1,23 @@
+#include "pch.h"
 #include "Application.h"
+#include "Shader.h"
 
 // Constructor definition
-Application::Application(uint32_t width, uint32_t height, const std::string& title, const std::string shaderName)
+Application::Application(uint32_t width, uint32_t height, const std::string& title, const std::string& shaderName)
     : m_Width(width), m_Height(height), m_Title(title), window(nullptr)
 {
     vertexShaderPath = (parentDir + "\\TerrainGen\\src\\shaders\\" + shaderName + ".vert").c_str();
     fragmentShaderPath = (parentDir + "\\TerrainGen\\src\\shaders\\" + shaderName + ".frag").c_str();
-
-    //Init();
 }
 
 // Framebuffer size callback definition
 void Application::FramebufferSizeCallback(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
+    Application* app = static_cast<Application*>(glfwGetWindowUserPointer(window));
+    if (app) {
+        app->updateProjectionMatrix();
+    }
 }
 
 // Initialization method
@@ -48,34 +52,46 @@ bool Application::Init()
 
     glViewport(0, 0, m_Width, m_Height);
 
-    if (!vertices.empty())
-    {
-        s_Vertices = &vertices[0];
-    }
-
-    // Generate VBO and bind it
     glGenBuffers(1, &VBO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-
-    // Send vertices to GPU
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), s_Vertices, GL_STATIC_DRAW);
-
-    // Generate VAO and bind it
     glGenVertexArrays(1, &VAO);
-    glBindVertexArray(VAO);
 
-    // Link vertex attributes
+    glBindVertexArray(VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(GLfloat), vertices.data(), GL_DYNAMIC_DRAW);
+
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
-    // Unbind VBO and VAO
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
-
-    shader = new Shader(vertexShaderPath, fragmentShaderPath);    
+    shader = new Shader(vertexShaderPath, fragmentShaderPath);
     shader->Use();
+
+    updateProjectionMatrix();
+
     return true;
+}
+
+void Application::UpdateVertices()
+{
+    if (!vertices.empty()) {
+        glBindBuffer(GL_ARRAY_BUFFER, VBO);
+        glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(GLfloat), vertices.data(), GL_DYNAMIC_DRAW);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+    }
+}
+
+void Application::updateProjectionMatrix() {
+    int width, height;
+    glfwGetFramebufferSize(window, &width, &height);
+    float aspectRatio = static_cast<float>(width) / height;
+
+    // Set up a projection matrix here (example using orthographic projection)
+    glm::mat4 projection = glm::ortho(-aspectRatio, aspectRatio, -1.0f, 1.0f, -1.0f, 1.0f);
+
+    shader->Use();
+    shader->SetMat4("projection", projection);
 }
 
 // Run method
@@ -90,7 +106,7 @@ void Application::Run()
 
         shader->Use();
         glBindVertexArray(VAO);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        glDrawArrays(GL_TRIANGLES, 0, vertices.size() / 3);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
@@ -113,7 +129,7 @@ void Application::CleanUp()
 
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
-    glDeleteProgram(shaderProgram);
+    glDeleteProgram(shader->ID);
 
     delete shader;
 
