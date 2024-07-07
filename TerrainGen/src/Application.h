@@ -12,9 +12,11 @@ public:
     void CleanUp();
 
     Shader* shader = nullptr;
-    
+
     GLfloat* s_Vertices = nullptr;
+    GLuint* s_Indices = nullptr;
     std::vector<GLfloat> vertices;
+    std::vector<GLuint> indices;
 
     std::string vertexShaderPath = "";
     std::string fragmentShaderPath = "";
@@ -27,6 +29,6 @@ private:
     uint32_t m_Width, m_Height;
     std::string m_Title;
 
-    GLuint VAO, VBO;
+    GLuint VAO, VBO, EBO;
     GLuint shaderProgram;
 };

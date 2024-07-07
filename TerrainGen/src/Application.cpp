@@ -48,9 +48,15 @@ bool Application::Init()
 
     glViewport(0, 0, m_Width, m_Height);
 
+    // Use vertex data from the vector
     if (!vertices.empty())
     {
-        s_Vertices = &vertices[0];
+        s_Vertices = vertices.data();
+    }
+
+    if (!indices.empty())
+    {
+        s_Indices = indices.data();
     }
 
     // Generate VBO and bind it
@@ -58,7 +64,7 @@ bool Application::Init()
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
     // Send vertices to GPU
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), s_Vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(GLfloat), s_Vertices, GL_STATIC_DRAW);
 
     // Generate VAO and bind it
     glGenVertexArrays(1, &VAO);
@@ -68,15 +74,20 @@ bool Application::Init()
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
+    // Create EBO and Bind
+    glGenBuffers(1, &EBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), s_Indices, GL_STATIC_DRAW);
+
     // Unbind VBO and VAO
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
-
-    shader = new Shader(vertexShaderPath, fragmentShaderPath);    
+    shader = new Shader(vertexShaderPath, fragmentShaderPath);
     shader->Use();
     return true;
 }
+
 
 // Run method
 void Application::Run()
@@ -89,8 +100,10 @@ void Application::Run()
         glClear(GL_COLOR_BUFFER_BIT);
 
         shader->Use();
+
         glBindVertexArray(VAO);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        glBindVertexArray(0);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
