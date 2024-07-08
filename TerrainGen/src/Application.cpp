@@ -58,7 +58,7 @@ void Application::Run()
     {
         processInput(window);
 
-        OnUpdate();
+        AppDispatchOnUpdate();
 
         glfwSwapBuffers(window);
         glfwPollEvents();

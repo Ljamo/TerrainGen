@@ -13,7 +13,7 @@ public:
 
     void GenBaseBuffers(bool hasEBO, GLfloat* vertices, size_t vertexCount, GLuint* indices, size_t indexCount);
 
-    void OnUpdateBuffers();
+    void OnUpdateDraw();
     void BufferCleanup();
 
 private:

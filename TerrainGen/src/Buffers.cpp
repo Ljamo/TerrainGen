@@ -50,7 +50,7 @@ void Buffers::GenBaseBuffers(bool hasEBO, GLfloat* vertices, size_t vertexCount,
     Use(); // Shader's usage
 }
 
-void Buffers::OnUpdateBuffers()
+void Buffers::OnUpdateDraw()
 {
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);

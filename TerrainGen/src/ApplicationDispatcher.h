@@ -12,7 +12,7 @@ public:
 
     void InitGraphics(bool hasEBO, std::vector<GLfloat>& vertices, std::vector<GLuint>& indices);
 
-    void OnUpdate();
+    void AppDispatchOnUpdate();
     void DispatchCleanup();
 };
 

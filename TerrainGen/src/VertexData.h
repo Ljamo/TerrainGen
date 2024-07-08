@@ -5,7 +5,7 @@
 class VertexData
 {
 public:
-    VertexData() { std::cout << "Initialized VertexData" << std::endl; }
+    VertexData() { std::cout << "VertexData Initialized" << std::endl; }
 
     void HandleVertices(std::vector<GLfloat>& vertices);
     void HandleIndices(std::vector<GLuint>& indices);
