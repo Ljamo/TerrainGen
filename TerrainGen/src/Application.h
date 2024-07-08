@@ -19,6 +19,8 @@ public:
     std::vector<GLfloat> vertices;
     std::vector<GLuint> indices;
 
+    GLFWwindow* GetWindow();
+
 private:
     static void FramebufferSizeCallback(GLFWwindow* window, int width, int height);
     void processInput(GLFWwindow* window);

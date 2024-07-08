@@ -1,4 +1,6 @@
 #pragma once
+#include "Core.h"
+
 #include <iostream>
 #include <cstdint>
 #include <string>
@@ -12,4 +14,9 @@
 
 #include "glm/glm.hpp"
 
-#include "Core.h"
+#ifdef ImGuiRenderer
+#include "imgui.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
+#endif
+

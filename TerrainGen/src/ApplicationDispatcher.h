@@ -10,9 +10,13 @@ public:
     ApplicationDispatcher(const std::string& vertexPath, const std::string& fragmentPath)
         : Buffers(vertexPath, fragmentPath), VertexData() {}
 
-    void InitGraphics(bool hasEBO, std::vector<GLfloat>& vertices, std::vector<GLuint>& indices);
+    void InitGraphics(GLFWwindow* window, bool hasEBO, std::vector<GLfloat>& vertices, std::vector<GLuint>& indices);
 
     void AppDispatchOnUpdate();
     void DispatchCleanup();
+
+private:
+    GLFWwindow* m_Window = nullptr;
+    // ImGuiIO* io = nullptr;
 };
 

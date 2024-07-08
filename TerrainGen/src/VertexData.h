@@ -13,7 +13,4 @@ public:
 protected:
     std::vector<GLfloat> m_Vertices;
     std::vector<GLuint> m_Indices;
-
-private:
-    uint32_t GetElementSize();
 };

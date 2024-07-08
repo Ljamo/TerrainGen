@@ -45,7 +45,7 @@ bool Application::Init()
 
     glViewport(0, 0, m_Width, m_Height);
 
-    InitGraphics(true, vertices, indices);
+    InitGraphics(window, true, vertices, indices);
     
     return true;
 }
@@ -87,4 +87,9 @@ void Application::CleanUp()
         window = nullptr;
     }
     glfwTerminate();
+}
+
+GLFWwindow* Application::GetWindow()
+{
+    return window;
 }
