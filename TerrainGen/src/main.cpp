@@ -1,3 +1,4 @@
+// Main.cpp
 #include "pch.h"
 
 #include "Application.h"
@@ -10,6 +11,9 @@ const unsigned int height = 600;
 const std::string title = "Test Window";
 
 const std::string shaderName = "default";
+
+const std::string vertName = (parentDir + "\\TerrainGen\\src\\shaders\\" + shaderName + ".vert").c_str();
+const std::string fragName = (parentDir + "\\TerrainGen\\src\\shaders\\" + shaderName + ".frag").c_str();
 
 /*
 GLfloat vertices[] =
@@ -34,7 +38,7 @@ GLuint indices[] = { // note that we start from 0!
 
 int main()
 {
-    Application* app = new Application(width, height, title, shaderName);
+    Application* app = new Application(width, height, title, vertName, fragName);
     app->vertices.insert(app->vertices.end(), std::begin(vertices), std::end(vertices));
     app->indices.insert(app->indices.end(), std::begin(indices), std::end(indices));
     app->Init();

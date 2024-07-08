@@ -1,6 +1,14 @@
 #include "Shader.h"
 
 Shader::Shader(const std::string& vertexPath, const std::string& fragmentPath)
+    : m_VertexPath(vertexPath), m_FragmentPath(fragmentPath)
+{
+    std::cout << "Shader Intitialized" << std::endl;
+    std::cout << vertexPath << std::endl;
+    std::cout << fragmentPath << std::endl;
+}
+
+void Shader::GetShaders()
 {
     // https://learnopengl.com/Getting-started/Shaders
     // Getting Files from path
@@ -15,9 +23,9 @@ Shader::Shader(const std::string& vertexPath, const std::string& fragmentPath)
     try
     {
         // open files
-        vShaderFile.open(vertexPath.c_str());
+        vShaderFile.open(m_VertexPath.c_str());
         std::cout << "Opening vertex shader" << std::endl;
-        fShaderFile.open(fragmentPath.c_str());
+        fShaderFile.open(m_FragmentPath.c_str());
         std::cout << "Opening fragment shader" << std::endl;
         std::stringstream vShaderStream, fShaderStream;
         // read file's buffer contents into streams
@@ -68,7 +76,7 @@ Shader::Shader(const std::string& vertexPath, const std::string& fragmentPath)
         std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
     };
 
-        // shader Program
+    // shader Program
     ID = glCreateProgram();
     glAttachShader(ID, vertex);
     glAttachShader(ID, fragment);

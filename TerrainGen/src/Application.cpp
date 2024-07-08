@@ -1,13 +1,10 @@
 #include "Application.h"
 
 // Constructor definition
-Application::Application(uint32_t width, uint32_t height, const std::string& title, const std::string shaderName)
-    : m_Width(width), m_Height(height), m_Title(title), window(nullptr)
+Application::Application(uint32_t width, uint32_t height, const std::string& title, const std::string& vertName, const std::string& fragName)
+    : m_Width(width), m_Height(height), m_Title(title), window(nullptr), ApplicationDispatcher(vertName, fragName)
 {
-    vertexShaderPath = (parentDir + "\\TerrainGen\\src\\shaders\\" + shaderName + ".vert").c_str();
-    fragmentShaderPath = (parentDir + "\\TerrainGen\\src\\shaders\\" + shaderName + ".frag").c_str();
 
-    //Init();
 }
 
 // Framebuffer size callback definition
@@ -48,43 +45,8 @@ bool Application::Init()
 
     glViewport(0, 0, m_Width, m_Height);
 
-    // Use vertex data from the vector
-    if (!vertices.empty())
-    {
-        s_Vertices = vertices.data();
-    }
-
-    if (!indices.empty())
-    {
-        s_Indices = indices.data();
-    }
-
-    // Generate VBO and bind it
-    glGenBuffers(1, &VBO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-
-    // Send vertices to GPU
-    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(GLfloat), s_Vertices, GL_STATIC_DRAW);
-
-    // Generate VAO and bind it
-    glGenVertexArrays(1, &VAO);
-    glBindVertexArray(VAO);
-
-    // Link vertex attributes
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-
-    // Create EBO and Bind
-    glGenBuffers(1, &EBO);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), s_Indices, GL_STATIC_DRAW);
-
-    // Unbind VBO and VAO
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
-
-    shader = new Shader(vertexShaderPath, fragmentShaderPath);
-    shader->Use();
+    InitGraphics(true, vertices, indices);
+    
     return true;
 }
 
@@ -96,14 +58,7 @@ void Application::Run()
     {
         processInput(window);
 
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
-
-        shader->Use();
-
-        glBindVertexArray(VAO);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-        glBindVertexArray(0);
+        OnUpdate();
 
         glfwSwapBuffers(window);
         glfwPollEvents();
@@ -124,11 +79,7 @@ void Application::CleanUp()
 {
     std::cout << "Cleaning Up" << std::endl;
 
-    glDeleteVertexArrays(1, &VAO);
-    glDeleteBuffers(1, &VBO);
-    glDeleteProgram(shaderProgram);
-
-    delete shader;
+    DispatchCleanup();
 
     if (window)
     {
